@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users</title>
+</head>
+<body>
+
+<h1>User List</h1>
+
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="email" placeholder="Email">
+<button onclick="addUser()">Add User</button>
+
+<ul id="list"></ul>
+
+<script>
+const API = "http://localhost:3000/users"
+
+// FETCH USERS
+function getUsers() {
+    fetch(API)
+    .then(res => res.json)
+    .then(data => {
+        const list = document.getElementById("list")
+        list.innerHTML = ""
+
+        data.forEach(user => {
+            list.innerHTML += `<li>${user.name} - ${user.email}</li>`
+        })
+    })
+}
+
+// ADD USER
+function addUser() {
+    const name = document.getElementById("name").value
+    const email = document.getElementById("email").value
+
+    fetch(API, {
+        method: "POST",
+        body: JSON.stringify({ name, email }),
+    })
+    .then(res => res.json())
+    .then(() => {
+        getUsers()
+    })
+}
+
+// BUG: Function not called
+// getUsers
+
+</script>
+
+</body>
+</html>
