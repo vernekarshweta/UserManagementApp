@@ -5,13 +5,14 @@ const cors = require('cors')
 const app = express()
 
 // BUG 1: Missing middleware
-// app.use(express.json())
+app.use(express.json())
 
 // BUG 2: CORS not enabled properly
-// app.use(cors)
+app.use(cors)
 
 mongoose.connect('mongodb://127.0.0.1:27017/testdb')
-
+   .then(() => console.log('Connected to MongoDB'))
+   .catch(err => console.log('Error connecting to MongoDB:',err));
 const userSchema = new mongoose.Schema({
     name: String,
     email: String
@@ -38,7 +39,7 @@ app.post('/users', async (req, res) => {
 
 // GET SINGLE USER
 app.get('/users/:id', async (req, res) => {
-    const user = await User.findOne("id": req.params.id)
+    const user = await User.findOne({_id: req.params.id})
     res.json(user)
 })
 
@@ -49,4 +50,7 @@ app.delete('/users/:id', async (req, res) => {
 })
 
 // BUG 3: No callback
-app.listen(3000)
+app.listen(3000,() =>{ 
+    console.log('server is running on port 3000 ');
+
+})
